@@ -23,13 +23,20 @@ const typeDefs = gql`
   }
 
   type Query {
-    products(page: Int, limit: Int, search: String, categoryIds: [ID!]): [Product]
+    products(
+      page: Int
+      limit: Int
+      search: String
+      categoryIds: [ID!]
+    ): [Product]
     categories: [Category]
   }
 
   type Mutation {
     addProduct(input: ProductInput!): Product
     deleteProduct(id: ID!): Boolean
+    addCategory(name: String!): Category
+    deleteCategory(id: ID!): Boolean
   }
 `;
 

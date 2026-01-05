@@ -59,6 +59,21 @@ const resolvers = {
       const deleted = await Product.findByIdAndDelete(id);
       return deleted ? true : false;
     },
+
+    // ✅ ADD CATEGORY
+    addCategory: async (_, { name }) => {
+      const existing = await Category.findOne({ name });
+      if (existing) throw new Error("Category already exists");
+
+      const category = new Category({ name });
+      return await category.save();
+    },
+
+    // ✅ DELETE CATEGORY
+    deleteCategory: async (_, { id }) => {
+      const deleted = await Category.findByIdAndDelete(id);
+      return !!deleted;
+    },
   },
 };
 
