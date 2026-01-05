@@ -8,6 +8,7 @@ import {
   FormControl,
   Chip,
   Box,
+  Typography,
 } from "@mui/material";
 import { GET_CATEGORIES } from "../graphql/queries";
 import { ADD_PRODUCT } from "../graphql/mutations";
@@ -35,10 +36,12 @@ const AddProductForm: React.FC = () => {
       setSelectedCategories([]);
       alert("Product added successfully!");
     },
+    refetchQueries: ["GetProducts"],
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(new Date().toISOString());
     addProduct({
       variables: {
         input: {
@@ -46,6 +49,7 @@ const AddProductForm: React.FC = () => {
           description,
           quantity,
           categoryIds: selectedCategories,
+          createdAt: new Date().toISOString(),
         },
       },
     });
@@ -53,17 +57,20 @@ const AddProductForm: React.FC = () => {
 
   return (
     <Box
+      className="sub-div-container"
       component="form"
       onSubmit={handleSubmit}
       sx={{
         maxWidth: 400,
-        m: "auto",
-        mt: 4,
         display: "flex",
         flexDirection: "column",
         gap: 2,
       }}
     >
+      <Typography variant="h5" mb={2}>
+        Product Form
+      </Typography>
+
       <TextField
         label="Product Name"
         value={name}
@@ -101,15 +108,13 @@ const AddProductForm: React.FC = () => {
           )}
         >
           {categories.map((cat) => (
-            <>
-              <MenuItem
-                key={cat.id}
-                value={cat.id}
-                sx={{ display: "flex", justifyContent: "space-between" }}
-              >
-                {cat.name}
-              </MenuItem>
-            </>
+            <MenuItem
+              key={cat.id}
+              value={cat.id}
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              {cat.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>

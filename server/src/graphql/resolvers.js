@@ -37,7 +37,7 @@ const resolvers = {
   Mutation: {
     // Add a new product
     addProduct: async (_, { input }) => {
-      const { name, description, quantity, categoryIds } = input;
+      const { name, description, quantity, categoryIds, createdAt } = input;
 
       // Check duplicate name
       const existing = await Product.findOne({ name });
@@ -48,6 +48,7 @@ const resolvers = {
         description,
         quantity,
         categories: categoryIds,
+        createdAt,
       });
 
       await product.save();

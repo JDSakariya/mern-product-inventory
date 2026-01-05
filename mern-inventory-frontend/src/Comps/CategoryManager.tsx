@@ -4,13 +4,13 @@ import { Box, Typography, TextField, Button, Stack, Chip } from "@mui/material";
 
 import { GET_CATEGORIES } from "../graphql/queries";
 import { ADD_CATEGORY, DELETE_CATEGORY } from "../graphql/mutations";
-
+interface IProps {}
 interface Category {
   id: string;
   name: string;
 }
 
-const CategoryManager = () => {
+const CategoryManager = (_props: IProps) => {
   const [name, setName] = useState("");
 
   const { data, loading, refetch } = useQuery<{ categories: Category[] }>(
@@ -36,7 +36,7 @@ const CategoryManager = () => {
   if (loading) return <p>Loading categories...</p>;
 
   return (
-    <Box sx={{ maxWidth: 600, mx: "auto", mt: 4 }}>
+    <Box className="sub-div-container">
       <Typography variant="h5" mb={2}>
         Category Manager
       </Typography>
@@ -53,7 +53,7 @@ const CategoryManager = () => {
         </Button>
       </Stack>
 
-      <Stack direction="row" spacing={1} flexWrap="wrap">
+      <Stack direction="row" spacing={1} flexWrap="wrap" gap={2}>
         {data?.categories?.map((cat: Category) => (
           <Chip
             key={cat.id}

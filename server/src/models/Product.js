@@ -4,21 +4,23 @@ const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   description: String,
   quantity: {
     type: Number,
-    default: 0
+    default: 0,
   },
-  categories: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category"
-  }],
+  categories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+  ],
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("Product", productSchema);

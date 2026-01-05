@@ -15,22 +15,24 @@ export const GET_PRODUCTS = gql`
     $limit: Int
     $search: String
     $categoryIds: [ID!]
+    $createdAt: String
   ) {
     products(
       page: $page
       limit: $limit
       search: $search
       categoryIds: $categoryIds
+      createdAt: $createdAt
     ) {
       id
       name
       description
       quantity
-      createdAt
       categories {
         id
         name
       }
+      createdAt
     }
   }
 `;

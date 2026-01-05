@@ -20,6 +20,7 @@ const typeDefs = gql`
     description: String
     quantity: Int
     categoryIds: [ID!]
+    createdAt: String
   }
 
   type Query {
@@ -28,6 +29,7 @@ const typeDefs = gql`
       limit: Int
       search: String
       categoryIds: [ID!]
+      createdAt: String
     ): [Product]
     categories: [Category]
   }

@@ -1,36 +1,36 @@
+import { useQuery, useMutation } from "@apollo/client/react";
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
-  Chip,
-  Button,
+  IconButton,
   Stack,
+  Chip,
+  Pagination,
+  Paper,
 } from "@mui/material";
+import { useState } from "react";
 import { GET_PRODUCTS } from "../graphql/queries";
 import { DELETE_PRODUCT } from "../graphql/mutations";
-import { useMutation, useQuery } from "@apollo/client/react";
 
-interface Category {
-  id: string;
-  name: string;
-}
+const LIMIT = 3;
 
 interface Product {
   id: string;
   name: string;
-  description?: string;
   quantity: number;
   createdAt: string;
-  categories: Category[];
+  categories: Array<{ id: string; name: string }>;
+}
+
+interface GetProductsData {
+  products: Product[];
 }
 
 const ProductList = () => {
-  const { data, loading, error, refetch } = useQuery<
-    { products: Product[] },
-    { page: number; limit: number }
-  >(GET_PRODUCTS, {
-    variables: { page: 1, limit: 5 },
+  const [page, setPage] = useState(1);
+
+  const { data, loading, refetch } = useQuery<GetProductsData>(GET_PRODUCTS, {
+    variables: { page, limit: LIMIT },
   });
 
   const [deleteProduct] = useMutation(DELETE_PRODUCT, {
@@ -38,46 +38,60 @@ const ProductList = () => {
   });
 
   if (loading) return <p>Loading products...</p>;
-  if (error) return <p>Error loading products</p>;
-
-  const products: Product[] = data?.products ?? [];
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", mt: 4 }}>
+    <Box className="sub-div-container">
       <Typography variant="h5" mb={2}>
-        Product Inventory
+        Product Listing
       </Typography>
 
-      {products.length === 0 && <p>No products found</p>}
-
-      <Stack spacing={2}>
-        {products.map((product) => (
-          <Card key={product.id}>
-            <CardContent>
+      {data?.products?.map((product: any) => (
+        <Paper key={product.id} sx={{ p: 2, mb: 2 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Box width={"70%"}>
               <Typography variant="h6">{product.name}</Typography>
-              <Typography color="text.secondary">
-                {product.description}
+              <Typography variant="body2">
+                Quantity: {product.quantity}
+              </Typography>
+              <Typography variant="caption">
+                Added on: {product.createdAt}
               </Typography>
 
-              <Typography mt={1}>Quantity: {product.quantity}</Typography>
-
-              <Box mt={1} sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                {product.categories.map((cat) => (
-                  <Chip key={cat.id} label={cat.name} />
-                ))}
-              </Box>
-
-              <Button
-                color="error"
-                variant="outlined"
-                sx={{ mt: 2 }}
-                onClick={() => deleteProduct({ variables: { id: product.id } })}
+              <Stack
+                direction="row"
+                gap={1}
+                flexWrap={"wrap"}
+                spacing={1}
+                mt={1}
               >
-                Delete
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+                {product.categories.map((cat: any) => (
+                  <Chip key={cat.id} label={cat.name} size="small" />
+                ))}
+              </Stack>
+            </Box>
+
+            <IconButton
+              color="error"
+              onClick={() => deleteProduct({ variables: { id: product.id } })}
+              sx={{ width: "8px" }}
+            >
+              X
+            </IconButton>
+          </Stack>
+        </Paper>
+      ))}
+
+      {/* Pagination */}
+      <Stack alignItems="center" mt={3}>
+        <Pagination
+          count={page + 1}
+          page={page}
+          onChange={(_, value) => setPage(value)}
+        />
       </Stack>
     </Box>
   );

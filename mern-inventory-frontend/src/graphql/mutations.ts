@@ -7,11 +7,11 @@ export const ADD_PRODUCT = gql`
       name
       description
       quantity
-      createdAt
       categories {
         id
         name
       }
+      createdAt
     }
   }
 `;
